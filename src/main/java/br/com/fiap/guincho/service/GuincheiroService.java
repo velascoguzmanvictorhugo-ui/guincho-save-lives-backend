@@ -2,10 +2,11 @@ package br.com.fiap.guincho.service;
 
 import br.com.fiap.guincho.dominio.Guincheiro;
 import br.com.fiap.guincho.dominio.RepositorioGuincheiros;
+import org.springframework.stereotype.Service; // <-- Importa esto
 import java.util.ArrayList;
 
+@Service // <-- ¡Agrega esta anotación aquí!
 public class GuincheiroService {
-
     private RepositorioGuincheiros repositorioGuincheiros;
 
     public GuincheiroService(RepositorioGuincheiros repositorioGuincheiros) {
