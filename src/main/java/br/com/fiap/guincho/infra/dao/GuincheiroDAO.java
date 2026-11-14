@@ -2,12 +2,15 @@ package br.com.fiap.guincho.infra.dao;
 
 import br.com.fiap.guincho.dominio.Guincheiro;
 import br.com.fiap.guincho.dominio.RepositorioGuincheiros;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@Repository
 public class GuincheiroDAO implements RepositorioGuincheiros {
 
     private long obterProximoIdGuincheiros() {

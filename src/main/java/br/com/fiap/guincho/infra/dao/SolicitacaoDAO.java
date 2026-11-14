@@ -2,12 +2,16 @@ package br.com.fiap.guincho.infra.dao;
 
 import br.com.fiap.guincho.dominio.RepositorioSolicitacoes;
 import br.com.fiap.guincho.dominio.Solicitacao;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
+@Repository
 public class SolicitacaoDAO implements RepositorioSolicitacoes {
 
     private long obterProximoIdSolicitacoes() {
