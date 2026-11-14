@@ -2,10 +2,10 @@ package br.com.fiap.guincho.dominio;
 
 public class CalculadoraDeTarifas {
     public double calcularTarifaLiquida(ChamadoVeiculo chamado) {
-        return chamado.lerValorLiquido() - descontoSindical();
+        return chamado.lerValorLiquido() - taxaPlataforma();
     }
 
-    private double descontoSindical() {
-        return 5;
+    private double taxaPlataforma() {
+        return 10.0;
     }
 }

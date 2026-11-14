@@ -6,18 +6,16 @@ import br.com.fiap.guincho.dominio.GeradorDeRelatorio;
 import br.com.fiap.guincho.dominio.Mensageiro;
 import br.com.fiap.guincho.dominio.RepositorioSolicitacoes;
 import br.com.fiap.guincho.dominio.Solicitacao;
+import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
 
+@Service
 public class SolicitacaoService {
-
-    private Mensageiro mensageiro;
-    private Correio correios;
-    private RepositorioSolicitacoes repositorioSolicitacoes;
-    private GeradorDeRelatorio geradorDeRelatorio;
+    private final Mensageiro mensageiro;
+    private final Correio correios;
+    private final RepositorioSolicitacoes repositorioSolicitacoes;
+    private final GeradorDeRelatorio geradorDeRelatorio;
 
     public SolicitacaoService(Mensageiro mensageiro, Correio correios,
                               RepositorioSolicitacoes repositorioSolicitacoes,
@@ -45,16 +43,5 @@ public class SolicitacaoService {
     public ArrayList<Solicitacao> obterTodasSolicitacoes() {
         return repositorioSolicitacoes.obterTodasSolicitacoes();
     }
-
-    public Map<String, Integer> contadorDePalavras(String texto) {
-        Map<String, Integer> palavras = new TreeMap<>();
-        for (String palavra : Arrays.asList(texto.split(" "))) {
-            if (palavras.containsKey(palavra)) {
-                palavras.put(palavra, palavras.get(palavra) + 1);
-            } else {
-                palavras.put(palavra, 1);
-            }
-        }
-        return palavras;
-    }
 }
+
