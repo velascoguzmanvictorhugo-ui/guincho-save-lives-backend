@@ -8,8 +8,8 @@ public class ConnectionFactory {
 
     public Connection getConnection() {
         String urlDeConexao = "jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL";
-        String login = "rm569427";
-        String senha = "070706";
+        String login = "rm573173";
+        String senha = "250499";
 
         try {
             return DriverManager.getConnection(urlDeConexao, login, senha);
