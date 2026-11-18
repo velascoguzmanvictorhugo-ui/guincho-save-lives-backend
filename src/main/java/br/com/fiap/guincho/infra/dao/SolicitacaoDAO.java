@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import java.util.List; // Importação necessária para usar a Interface
 
 @Repository
 public class SolicitacaoDAO implements RepositorioSolicitacoes {
@@ -37,7 +37,8 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
     public void salvar(Solicitacao solicitacao) {
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "INSERT INTO T_GSL_SOLICITACAO (id, nome_cliente, origem, destino, veiculo, problema, cep) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            // SQL atualizado para incluir o cliente_id (A chave estrangeira 1:N)
+            String sql = "INSERT INTO T_GSL_SOLICITACAO (id, nome_cliente, origem, destino, veiculo, problema, cep, cliente_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement comandoDeInsercao = conexao.prepareStatement(sql);
             comandoDeInsercao.setLong(1, obterProximoIdSolicitacoes());
             comandoDeInsercao.setString(2, solicitacao.getNomeCliente());
@@ -46,6 +47,14 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
             comandoDeInsercao.setString(5, solicitacao.getVeiculo());
             comandoDeInsercao.setString(6, solicitacao.getProblema());
             comandoDeInsercao.setString(7, solicitacao.getCep());
+
+            // Grava a Foreign Key (trata caso venha nulo)
+            if (solicitacao.getClienteId() != null) {
+                comandoDeInsercao.setLong(8, solicitacao.getClienteId());
+            } else {
+                comandoDeInsercao.setNull(8, java.sql.Types.NUMERIC);
+            }
+
             comandoDeInsercao.execute();
             comandoDeInsercao.close();
             conexao.close();
@@ -55,16 +64,22 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
     }
 
     @Override
-    public ArrayList<Solicitacao> obterTodasSolicitacoes() {
-        ArrayList<Solicitacao> solicitacoes = new ArrayList<>();
+    public List<Solicitacao> obterTodasSolicitacoes() { // Assinatura atualizada para List
+        List<Solicitacao> solicitacoes = new ArrayList<>(); // Instanciando ArrayList numa variável List
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "SELECT id, nome_cliente, origem, destino, veiculo, problema, cep FROM T_GSL_SOLICITACAO";
+            // SQL atualizado para buscar o cliente_id
+            String sql = "SELECT id, cliente_id, nome_cliente, origem, destino, veiculo, problema, cep FROM T_GSL_SOLICITACAO";
             PreparedStatement comandoDeSelecao = conexao.prepareStatement(sql);
             ResultSet rs = comandoDeSelecao.executeQuery();
             while (rs.next()) {
+                // Recupera o Long, garantindo que o Java não o transforme em 0 se for nulo
+                Long clienteId = (Long) rs.getObject("cliente_id");
+
+                // Construtor atualizado com clienteId na segunda posição
                 Solicitacao s = new Solicitacao(
                         String.valueOf(rs.getLong("id")),
+                        clienteId,
                         rs.getString("nome_cliente"),
                         rs.getString("origem"),
                         rs.getString("destino"),

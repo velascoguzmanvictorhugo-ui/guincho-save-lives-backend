@@ -1,8 +1,8 @@
 package br.com.fiap.guincho.dominio;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface RepositorioSolicitacoes {
     void salvar(Solicitacao solicitacao);
-    ArrayList<Solicitacao> obterTodasSolicitacoes();
+    List<Solicitacao> obterTodasSolicitacoes(); // Cambiado a List
 }
