@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List; // Importação necessária para usar a Interface
+import java.util.List;
 
 @Repository
 public class SolicitacaoDAO implements RepositorioSolicitacoes {
@@ -17,7 +17,8 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
     private long obterProximoIdSolicitacoes() {
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "SELECT SQ_GSL_SOLICITACAO.NEXTVAL FROM DUAL";
+            // Atualizado para a sequência correta do script SQL
+            String sql = "SELECT tb_solicitacao_seq.NEXTVAL FROM DUAL";
             PreparedStatement comando = conexao.prepareStatement(sql);
             ResultSet rs = comando.executeQuery();
             long id = 1;
@@ -37,8 +38,8 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
     public void salvar(Solicitacao solicitacao) {
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            // SQL atualizado para incluir o cliente_id (A chave estrangeira 1:N)
-            String sql = "INSERT INTO T_GSL_SOLICITACAO (id, nome_cliente, origem, destino, veiculo, problema, cep, cliente_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            // Atualizado para a tabela tb_solicitacao e id_solicitacao
+            String sql = "INSERT INTO tb_solicitacao (id_solicitacao, nome_cliente, origem, destino, veiculo, problema, cep, cliente_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement comandoDeInsercao = conexao.prepareStatement(sql);
             comandoDeInsercao.setLong(1, obterProximoIdSolicitacoes());
             comandoDeInsercao.setString(2, solicitacao.getNomeCliente());
@@ -64,21 +65,20 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
     }
 
     @Override
-    public List<Solicitacao> obterTodasSolicitacoes() { // Assinatura atualizada para List
-        List<Solicitacao> solicitacoes = new ArrayList<>(); // Instanciando ArrayList numa variável List
+    public List<Solicitacao> obterTodasSolicitacoes() {
+        List<Solicitacao> solicitacoes = new ArrayList<>();
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            // SQL atualizado para buscar o cliente_id
-            String sql = "SELECT id, cliente_id, nome_cliente, origem, destino, veiculo, problema, cep FROM T_GSL_SOLICITACAO";
+            // Atualizado para buscar da tb_solicitacao com id_solicitacao
+            String sql = "SELECT id_solicitacao, cliente_id, nome_cliente, origem, destino, veiculo, problema, cep FROM tb_solicitacao";
             PreparedStatement comandoDeSelecao = conexao.prepareStatement(sql);
             ResultSet rs = comandoDeSelecao.executeQuery();
             while (rs.next()) {
                 // Recupera o Long, garantindo que o Java não o transforme em 0 se for nulo
                 Long clienteId = (Long) rs.getObject("cliente_id");
 
-                // Construtor atualizado com clienteId na segunda posição
                 Solicitacao s = new Solicitacao(
-                        String.valueOf(rs.getLong("id")),
+                        String.valueOf(rs.getLong("id_solicitacao")),
                         clienteId,
                         rs.getString("nome_cliente"),
                         rs.getString("origem"),

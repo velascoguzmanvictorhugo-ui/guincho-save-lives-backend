@@ -17,7 +17,8 @@ public class ClienteDAO implements RepositorioClientes {
     private long obterProximoId() {
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "SELECT SQ_GSL_CLIENTE.NEXTVAL FROM DUAL";
+            // Atualizado para a sequência correta do script SQL
+            String sql = "SELECT tb_cliente_seq.NEXTVAL FROM DUAL";
             PreparedStatement comando = conexao.prepareStatement(sql);
             ResultSet rs = comando.executeQuery();
             long id = 1;
@@ -37,7 +38,8 @@ public class ClienteDAO implements RepositorioClientes {
     public void salvar(Cliente cliente) {
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "INSERT INTO T_GSL_CLIENTE (id, nome, email, telefone) VALUES (?, ?, ?, ?)";
+            // Atualizado para a tabela tb_cliente, id_cliente e envio de um CPF padrão para não dar erro de NOT NULL
+            String sql = "INSERT INTO tb_cliente (id_cliente, nome, email, telefone, cpf) VALUES (?, ?, ?, ?, '000.000.000-00')";
             PreparedStatement comando = conexao.prepareStatement(sql);
             comando.setLong(1, obterProximoId());
             comando.setString(2, cliente.getNome());
@@ -56,12 +58,13 @@ public class ClienteDAO implements RepositorioClientes {
         List<Cliente> clientes = new ArrayList<>();
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "SELECT id, nome, email, telefone FROM T_GSL_CLIENTE";
+            // Atualizado para buscar de tb_cliente e id_cliente
+            String sql = "SELECT id_cliente, nome, email, telefone FROM tb_cliente";
             PreparedStatement comando = conexao.prepareStatement(sql);
             ResultSet rs = comando.executeQuery();
             while (rs.next()) {
                 clientes.add(new Cliente(
-                        rs.getLong("id"),
+                        rs.getLong("id_cliente"),
                         rs.getString("nome"),
                         rs.getString("email"),
                         rs.getString("telefone")
@@ -81,13 +84,14 @@ public class ClienteDAO implements RepositorioClientes {
         Cliente cliente = null;
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "SELECT id, nome, email, telefone FROM T_GSL_CLIENTE WHERE id = ?";
+            // Atualizado para tb_cliente e id_cliente
+            String sql = "SELECT id_cliente, nome, email, telefone FROM tb_cliente WHERE id_cliente = ?";
             PreparedStatement comando = conexao.prepareStatement(sql);
             comando.setLong(1, id);
             ResultSet rs = comando.executeQuery();
             if (rs.next()) {
                 cliente = new Cliente(
-                        rs.getLong("id"),
+                        rs.getLong("id_cliente"),
                         rs.getString("nome"),
                         rs.getString("email"),
                         rs.getString("telefone")
@@ -106,7 +110,8 @@ public class ClienteDAO implements RepositorioClientes {
     public void atualizar(Cliente cliente) {
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "UPDATE T_GSL_CLIENTE SET nome = ?, email = ?, telefone = ? WHERE id = ?";
+            // Atualizado para tb_cliente e id_cliente
+            String sql = "UPDATE tb_cliente SET nome = ?, email = ?, telefone = ? WHERE id_cliente = ?";
             PreparedStatement comando = conexao.prepareStatement(sql);
             comando.setString(1, cliente.getNome());
             comando.setString(2, cliente.getEmail());
@@ -124,7 +129,8 @@ public class ClienteDAO implements RepositorioClientes {
     public void excluir(Long id) {
         try {
             Connection conexao = new ConnectionFactory().getConnection();
-            String sql = "DELETE FROM T_GSL_CLIENTE WHERE id = ?";
+            // Atualizado para tb_cliente e id_cliente
+            String sql = "DELETE FROM tb_cliente WHERE id_cliente = ?";
             PreparedStatement comando = conexao.prepareStatement(sql);
             comando.setLong(1, id);
             comando.execute();
