@@ -79,8 +79,9 @@ public class ColecoesERelatorioTest {
         relatorio.delete();
         RelacaoDeChamadosEmArquivo relacao = new RelacaoDeChamadosEmArquivo(relatorio);
 
-        Solicitacao s1 = new Solicitacao("1", "Fernanda Santos", "Rua A", "Rua B", "Carro", "Pane", "01001000");
-        Solicitacao s2 = new Solicitacao("2", "Gustavo Ferreira", "Rua C", "Rua D", "Moto", "Pneu", "01310100");
+        // AQUÍ ESTÁ LA CORRECCIÓN: Se agregó 1L y 2L como segundo parámetro (clienteId)
+        Solicitacao s1 = new Solicitacao("1", 1L, "Fernanda Santos", "Rua A", "Rua B", "Carro", "Pane", "01001000");
+        Solicitacao s2 = new Solicitacao("2", 2L, "Gustavo Ferreira", "Rua C", "Rua D", "Moto", "Pneu", "01310100");
 
         relacao.adicionar(s1);
         relacao.adicionar(s2);

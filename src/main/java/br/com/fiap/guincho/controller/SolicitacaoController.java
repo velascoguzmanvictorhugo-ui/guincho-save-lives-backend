@@ -5,30 +5,37 @@ import br.com.fiap.guincho.service.SolicitacaoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
 
+import java.util.List;
 @RestController
 @RequestMapping("/solicitacoes")
 public class SolicitacaoController {
 
-    private final SolicitacaoService solicitacaoService;
+    private SolicitacaoService solicitacaoService;
 
     public SolicitacaoController(SolicitacaoService solicitacaoService) {
         this.solicitacaoService = solicitacaoService;
     }
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody Solicitacao solicitacao) {
+    public ResponseEntity salvar(@RequestBody Solicitacao solicitacao) {
         try {
             solicitacaoService.adicionar(solicitacao);
-            return ResponseEntity.status(HttpStatus.CREATED).body(solicitacao);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(solicitacao);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
         }
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<Solicitacao>> obterTodasSolicitacoes() {
+    public ResponseEntity<List<Solicitacao>> obterTodasSolicitacoes() {
+        // Al usar List en lugar de ArrayList, el error de compilación de Maven desaparece
         return ResponseEntity.ok(solicitacaoService.obterTodasSolicitacoes());
     }
 }
