@@ -14,34 +14,22 @@ import java.util.List;
 @Repository
 public class SolicitacaoDAO implements RepositorioSolicitacoes {
 
-    private long obterProximoIdSolicitacoes() {
-        try {
-            Connection conexao = new ConnectionFactory().getConnection();
-            // Atualizado para a sequência correta do script SQL
-            String sql = "SELECT tb_solicitacao_seq.NEXTVAL FROM DUAL";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            ResultSet rs = comando.executeQuery();
-            long id = 1;
-            if (rs.next()) {
-                id = rs.getLong(1);
-            }
-            rs.close();
-            comando.close();
-            conexao.close();
-            return id;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    private long obterProximoIdSolicitacoes(Connection conexao) throws SQLException {
+        String sql = "SELECT tb_solicitacao_seq.NEXTVAL FROM DUAL";
+        try (PreparedStatement comando = conexao.prepareStatement(sql);
+             ResultSet rs = comando.executeQuery()) {
+            return rs.next() ? rs.getLong(1) : 1L;
         }
     }
 
     @Override
     public void salvar(Solicitacao solicitacao) {
-        try {
-            Connection conexao = new ConnectionFactory().getConnection();
-            // Atualizado para a tabela tb_solicitacao e id_solicitacao
-            String sql = "INSERT INTO tb_solicitacao (id_solicitacao, nome_cliente, origem, destino, veiculo, problema, cep, cliente_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement comandoDeInsercao = conexao.prepareStatement(sql);
-            comandoDeInsercao.setLong(1, obterProximoIdSolicitacoes());
+        String sql = "INSERT INTO tb_solicitacao (id_solicitacao, nome_cliente, origem, destino, veiculo, problema, cep, cliente_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conexao = new ConnectionFactory().getConnection();
+             PreparedStatement comandoDeInsercao = conexao.prepareStatement(sql)) {
+
+            long proximoId = obterProximoIdSolicitacoes(conexao);
+            comandoDeInsercao.setLong(1, proximoId);
             comandoDeInsercao.setString(2, solicitacao.getNomeCliente());
             comandoDeInsercao.setString(3, solicitacao.getOrigem());
             comandoDeInsercao.setString(4, solicitacao.getDestino());
@@ -49,7 +37,6 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
             comandoDeInsercao.setString(6, solicitacao.getProblema());
             comandoDeInsercao.setString(7, solicitacao.getCep());
 
-            // Grava a Foreign Key (trata caso venha nulo)
             if (solicitacao.getClienteId() != null) {
                 comandoDeInsercao.setLong(8, solicitacao.getClienteId());
             } else {
@@ -57,8 +44,6 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
             }
 
             comandoDeInsercao.execute();
-            comandoDeInsercao.close();
-            conexao.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -67,15 +52,14 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
     @Override
     public List<Solicitacao> obterTodasSolicitacoes() {
         List<Solicitacao> solicitacoes = new ArrayList<>();
-        try {
-            Connection conexao = new ConnectionFactory().getConnection();
-            // Atualizado para buscar da tb_solicitacao com id_solicitacao
-            String sql = "SELECT id_solicitacao, cliente_id, nome_cliente, origem, destino, veiculo, problema, cep FROM tb_solicitacao";
-            PreparedStatement comandoDeSelecao = conexao.prepareStatement(sql);
-            ResultSet rs = comandoDeSelecao.executeQuery();
+        String sql = "SELECT id_solicitacao, cliente_id, nome_cliente, origem, destino, veiculo, problema, cep FROM tb_solicitacao ORDER BY id_solicitacao DESC";
+        try (Connection conexao = new ConnectionFactory().getConnection();
+             PreparedStatement comandoDeSelecao = conexao.prepareStatement(sql);
+             ResultSet rs = comandoDeSelecao.executeQuery()) {
+
             while (rs.next()) {
-                // Recupera o Long, garantindo que o Java não o transforme em 0 se for nulo
-                Long clienteId = (Long) rs.getObject("cliente_id");
+                long clienteIdRaw = rs.getLong("cliente_id");
+                Long clienteId = rs.wasNull() ? null : clienteIdRaw;
 
                 Solicitacao s = new Solicitacao(
                         String.valueOf(rs.getLong("id_solicitacao")),
@@ -89,9 +73,6 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
                 );
                 solicitacoes.add(s);
             }
-            rs.close();
-            comandoDeSelecao.close();
-            conexao.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
