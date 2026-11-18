@@ -5,4 +5,5 @@ import java.util.ArrayList;
 public interface RepositorioGuincheiros {
     void salvar(Guincheiro guincheiro);
     ArrayList<Guincheiro> obterTodosGuincheiros();
+    ArrayList<Guincheiro> buscarPorRegiaoOuCidade(String termo);
 }

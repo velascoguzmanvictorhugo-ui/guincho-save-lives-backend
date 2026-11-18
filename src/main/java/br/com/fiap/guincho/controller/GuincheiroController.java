@@ -28,7 +28,12 @@ public class GuincheiroController {
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<Guincheiro>> obterTodosGuincheiros() {
+    public ResponseEntity<ArrayList<Guincheiro>> obterTodosGuincheiros(
+            @RequestParam(required = false) String regiao) {
+        // Se o usuário digitou algo na busca, filtra. Se vier vazio, traz todos.
+        if (regiao != null && !regiao.isEmpty()) {
+            return ResponseEntity.ok(guincheiroService.buscarPorRegiaoOuCidade(regiao));
+        }
         return ResponseEntity.ok(guincheiroService.obterTodosGuincheiros());
     }
 }
