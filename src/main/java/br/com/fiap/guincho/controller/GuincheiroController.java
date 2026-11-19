@@ -26,11 +26,11 @@ public class GuincheiroController {
             guincheiroService.adicionar(guincheiro);
             return ResponseEntity.status(HttpStatus.CREATED).body(guincheiro);
         } catch (RegraDeNegocioException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno inesperado ao cadastrar guincheiro.");
         }
     }
 
@@ -46,9 +46,9 @@ public class GuincheiroController {
             }
             return ResponseEntity.ok(guincheiros);
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno inesperado ao listar guincheiros.");
         }
     }
 
@@ -60,9 +60,9 @@ public class GuincheiroController {
         } catch (RecursoNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno inesperado ao buscar guincheiro.");
         }
     }
 
@@ -71,14 +71,14 @@ public class GuincheiroController {
         try {
             Guincheiro atualizado = guincheiroService.atualizar(id, guincheiro);
             return ResponseEntity.ok(atualizado);
-        } catch (RegraDeNegocioException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (RecursoNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RegraDeNegocioException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno inesperado ao atualizar guincheiro.");
         }
     }
 
@@ -89,10 +89,12 @@ public class GuincheiroController {
             return ResponseEntity.noContent().build();
         } catch (RecursoNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RegraDeNegocioException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno inesperado ao excluir guincheiro.");
         }
     }
 }
