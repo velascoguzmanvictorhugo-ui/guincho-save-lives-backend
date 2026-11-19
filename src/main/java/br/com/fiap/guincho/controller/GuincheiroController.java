@@ -5,7 +5,8 @@ import br.com.fiap.guincho.service.GuincheiroService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/guincheiros")
@@ -28,12 +29,14 @@ public class GuincheiroController {
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<Guincheiro>> obterTodosGuincheiros(
+    public ResponseEntity<List<Guincheiro>> obterTodosGuincheiros(
             @RequestParam(required = false) String regiao) {
-        // Se o usuário digitou algo na busca, filtra. Se vier vazio, traz todos.
+        List<Guincheiro> guincheiros;
         if (regiao != null && !regiao.isEmpty()) {
-            return ResponseEntity.ok(guincheiroService.buscarPorRegiaoOuCidade(regiao));
+            guincheiros = guincheiroService.buscarPorRegiaoOuCidade(regiao);
+        } else {
+            guincheiros = guincheiroService.obterTodosGuincheiros();
         }
-        return ResponseEntity.ok(guincheiroService.obterTodosGuincheiros());
+        return ResponseEntity.ok(guincheiros);
     }
 }

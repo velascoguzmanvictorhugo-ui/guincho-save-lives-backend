@@ -44,6 +44,7 @@ public class SolicitacaoDAO implements RepositorioSolicitacoes {
             }
 
             comandoDeInsercao.execute();
+            solicitacao.setId(String.valueOf(proximoId));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
