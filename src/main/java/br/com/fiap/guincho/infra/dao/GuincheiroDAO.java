@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class GuincheiroDAO implements RepositorioGuincheiros {
@@ -53,8 +54,8 @@ public class GuincheiroDAO implements RepositorioGuincheiros {
     }
 
     @Override
-    public ArrayList<Guincheiro> obterTodosGuincheiros() {
-        ArrayList<Guincheiro> guincheiros = new ArrayList<>();
+    public List<Guincheiro> obterTodosGuincheiros() {
+        List<Guincheiro> guincheiros = new ArrayList<>();
         try {
             Connection conexao = new ConnectionFactory().getConnection();
             String sql = "SELECT id_guincheiro, nome, regiao, cidade, tipo_veiculo, taxa_base FROM tb_guincheiro";
@@ -80,8 +81,37 @@ public class GuincheiroDAO implements RepositorioGuincheiros {
         return guincheiros;
     }
 
-    public ArrayList<Guincheiro> buscarPorRegiaoOuCidade(String termo) {
-        ArrayList<Guincheiro> guincheiros = new ArrayList<>();
+    @Override
+    public Guincheiro buscarPorId(long id) {
+        try {
+            Connection conexao = new ConnectionFactory().getConnection();
+            String sql = "SELECT id_guincheiro, nome, regiao, cidade, tipo_veiculo, taxa_base FROM tb_guincheiro WHERE id_guincheiro = ?";
+            PreparedStatement comando = conexao.prepareStatement(sql);
+            comando.setLong(1, id);
+            ResultSet rs = comando.executeQuery();
+            Guincheiro guincheiro = null;
+            if (rs.next()) {
+                guincheiro = new Guincheiro(
+                        String.valueOf(rs.getLong("id_guincheiro")),
+                        rs.getString("nome"),
+                        rs.getString("regiao"),
+                        rs.getString("cidade"),
+                        rs.getString("tipo_veiculo"),
+                        rs.getDouble("taxa_base")
+                );
+            }
+            rs.close();
+            comando.close();
+            conexao.close();
+            return guincheiro;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Guincheiro> buscarPorRegiaoOuCidade(String termo) {
+        List<Guincheiro> guincheiros = new ArrayList<>();
         try {
             Connection conexao = new ConnectionFactory().getConnection();
             String sql = "SELECT id_guincheiro, nome, regiao, cidade, tipo_veiculo, taxa_base " +
@@ -110,5 +140,40 @@ public class GuincheiroDAO implements RepositorioGuincheiros {
             throw new RuntimeException(e);
         }
         return guincheiros;
+    }
+
+    @Override
+    public void atualizar(long id, Guincheiro guincheiro) {
+        try {
+            Connection conexao = new ConnectionFactory().getConnection();
+            String sql = "UPDATE tb_guincheiro SET nome = ?, regiao = ?, cidade = ?, tipo_veiculo = ?, taxa_base = ? WHERE id_guincheiro = ?";
+            PreparedStatement comando = conexao.prepareStatement(sql);
+            comando.setString(1, guincheiro.getNome());
+            comando.setString(2, guincheiro.getRegiao());
+            comando.setString(3, guincheiro.getCidade());
+            comando.setString(4, guincheiro.getTipoGuincho());
+            comando.setDouble(5, guincheiro.getPreco());
+            comando.setLong(6, id);
+            comando.executeUpdate();
+            comando.close();
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void excluir(long id) {
+        try {
+            Connection conexao = new ConnectionFactory().getConnection();
+            String sql = "DELETE FROM tb_guincheiro WHERE id_guincheiro = ?";
+            PreparedStatement comando = conexao.prepareStatement(sql);
+            comando.setLong(1, id);
+            comando.executeUpdate();
+            comando.close();
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

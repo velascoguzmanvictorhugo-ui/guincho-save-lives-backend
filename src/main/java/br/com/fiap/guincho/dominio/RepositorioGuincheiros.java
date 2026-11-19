@@ -1,9 +1,12 @@
 package br.com.fiap.guincho.dominio;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface RepositorioGuincheiros {
     void salvar(Guincheiro guincheiro);
-    ArrayList<Guincheiro> obterTodosGuincheiros();
-    ArrayList<Guincheiro> buscarPorRegiaoOuCidade(String termo);
+    List<Guincheiro> obterTodosGuincheiros();
+    Guincheiro buscarPorId(long id);
+    List<Guincheiro> buscarPorRegiaoOuCidade(String termo);
+    void atualizar(long id, Guincheiro guincheiro);
+    void excluir(long id);
 }

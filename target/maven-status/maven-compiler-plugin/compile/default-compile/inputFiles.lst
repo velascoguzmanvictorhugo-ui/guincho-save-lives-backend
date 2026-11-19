@@ -1,5 +1,6 @@
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\config\CorsConfig.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\controller\ClienteController.java
+C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\controller\FuncionarioController.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\controller\GuincheiroController.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\controller\SolicitacaoController.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\dominio\CalculadoraDeTarifas.java
@@ -15,6 +16,8 @@ C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\dominio\RepositorioGuincheiros.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\dominio\RepositorioSolicitacoes.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\dominio\Solicitacao.java
+C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\exception\RecursoNaoEncontradoException.java
+C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\exception\RegraDeNegocioException.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\GuinchoSaveLivesApplication.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\infra\arquivo\RelacaoDeChamadosEmArquivo.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\infra\dao\ClienteDAO.java
@@ -24,5 +27,6 @@ C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\infra\mensageiro\MensageiroImpl.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\infra\viacep\CorreioImpl.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\service\ClienteService.java
+C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\service\FuncionarioService.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\service\GuincheiroService.java
 C:\Users\vhvg4\OneDrive\Desktop\Nueva carpeta (3)\guincho-save-lives-backend\src\main\java\br\com\fiap\guincho\service\SolicitacaoService.java

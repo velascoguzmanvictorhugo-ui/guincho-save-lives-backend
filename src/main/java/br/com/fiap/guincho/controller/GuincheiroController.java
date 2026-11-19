@@ -1,6 +1,8 @@
 package br.com.fiap.guincho.controller;
 
 import br.com.fiap.guincho.dominio.Guincheiro;
+import br.com.fiap.guincho.exception.RecursoNaoEncontradoException;
+import br.com.fiap.guincho.exception.RegraDeNegocioException;
 import br.com.fiap.guincho.service.GuincheiroService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +25,74 @@ public class GuincheiroController {
         try {
             guincheiroService.adicionar(guincheiro);
             return ResponseEntity.status(HttpStatus.CREATED).body(guincheiro);
+        } catch (RegraDeNegocioException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Guincheiro>> obterTodosGuincheiros(
+    public ResponseEntity<Object> obterTodosGuincheiros(
             @RequestParam(required = false) String regiao) {
-        List<Guincheiro> guincheiros;
-        if (regiao != null && !regiao.isEmpty()) {
-            guincheiros = guincheiroService.buscarPorRegiaoOuCidade(regiao);
-        } else {
-            guincheiros = guincheiroService.obterTodosGuincheiros();
+        try {
+            List<Guincheiro> guincheiros;
+            if (regiao != null && !regiao.isBlank()) {
+                guincheiros = guincheiroService.buscarPorRegiaoOuCidade(regiao);
+            } else {
+                guincheiros = guincheiroService.obterTodosGuincheiros();
+            }
+            return ResponseEntity.ok(guincheiros);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        return ResponseEntity.ok(guincheiros);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> buscarPorId(@PathVariable long id) {
+        try {
+            Guincheiro guincheiro = guincheiroService.buscarPorId(id);
+            return ResponseEntity.ok(guincheiro);
+        } catch (RecursoNaoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizar(@PathVariable long id, @RequestBody Guincheiro guincheiro) {
+        try {
+            Guincheiro atualizado = guincheiroService.atualizar(id, guincheiro);
+            return ResponseEntity.ok(atualizado);
+        } catch (RegraDeNegocioException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (RecursoNaoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> excluir(@PathVariable long id) {
+        try {
+            guincheiroService.excluir(id);
+            return ResponseEntity.noContent().build();
+        } catch (RecursoNaoEncontradoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }
